@@ -9,12 +9,12 @@ import (
 	"sync"
 )
 
-func greetingsHandler (w http.ResponseWriter, r *http.Request) {
+func greetingsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello World!")
 }
 
 func serveIndexHtml(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "index.html");
+	http.ServeFile(w, r, "index.html")
 }
 
 func servePublic(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +59,7 @@ func streamAudio(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	startFFMpeg()
-	
+
 	r := http.NewServeMux()
 	r.HandleFunc("/", serveIndexHtml)
 	r.HandleFunc("/hello", greetingsHandler)
