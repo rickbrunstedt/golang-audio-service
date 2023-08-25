@@ -26,9 +26,15 @@ func servePublic(w http.ResponseWriter, r *http.Request) {
 
 var audioStream io.Reader
 var audioStreamLock sync.Mutex
+var mic = exec.Command("ffmpeg", "-f", "alsa", "-i", "default", "-f", "mp3", "pipe:1")
+var micAndOther = exec.Command("ffmpeg",
+	"-f", "pulse", "-i", "alsa_output.pci-0000_01_00.1.hdmi-stereo.monitor",
+	"-f", "pulse", "-i", "alsa_output.usb-Logitech_PRO_X_Wireless_Gaming_Headset-00.analog-stereo.monitor",
+	"-filter_complex", "[0:a][1:a]amerge=inputs=2[aout]",
+	"-map", "[aout]", "-f", "mp3", "pipe:1")
 
 func startFFMpeg() {
-	cmd := exec.Command("ffmpeg", "-f", "alsa", "-i", "default", "-f", "mp3", "pipe:1")
+	cmd := mic
 	r, w := io.Pipe()
 	cmd.Stdout = w
 	audioStream = r
